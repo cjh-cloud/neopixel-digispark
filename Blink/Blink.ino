@@ -1,22 +1,7 @@
-//void setup() {                
-//  // Initialize the digital pin as an output
-//  pinMode(0, OUTPUT);      // LED on Model B
-//  pinMode(1, OUTPUT);      // LED on Model A   
-//}
-//
-//void loop() {
-//  digitalWrite(0, HIGH);   // Turn the LED on
-//  digitalWrite(1, HIGH);
-//  delay(1000);             // Wait for a second
-//  digitalWrite(0, LOW);    // Turn the LED off
-//  digitalWrite(1, LOW); 
-//  delay(1000);             // Wait for a second
-//}
-
 #include <Adafruit_NeoPixel.h>
 
 #define PIN 1
-#define STRIPSIZE 3 // Limited by max 256 bytes ram. At 3 bytes/LED you get max ~85 pixels
+#define STRIPSIZE 40 // Limited by max 256 bytes ram. At 3 bytes/LED you get max ~85 pixels
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = pin number (most are valid)
@@ -31,21 +16,29 @@ void setup() {
   strip.begin();
   strip.setBrightness(100); // set accordingly
   strip.show(); // Initialize all pixels to 'off'
+  colorWipe(strip.Color(0,0,0), 25); // Black
 }
 
 void loop() {
   // Some example procedures showing how to display to the pixels:
-  colorWipe(strip.Color(0,0,0), 25); // Black
-  colorWipe(strip.Color(64, 0, 0), 100); // Red
-  colorWipe(strip.Color(0, 64, 0), 100); // Green
-  colorWipe(strip.Color(0, 0, 64), 100); // Blue
-  colorWave(75);
-  colorWipe(strip.Color(0,0,0), 100); // Black
-  rainbow(15);
-  colorWipe(strip.Color(0,0,0), 100); // Black
-  rainbowCycle(15);
-  colorWipe(strip.Color(0,0,0), 100); // Black
-  colorWave(30);
+//  colorWipe(strip.Color(0,0,0), 100); // Black
+//  rainbowCycle(15);
+//  colorWipe(strip.Color(0,0,0), 100); // Black
+//  colorWave(15);
+//  rainbow(1000);
+  solid(1000);
+}
+
+void solid(uint16_t wait) {
+  uint16_t i, j;
+
+  for(j=0; j<256; j++) {
+    for(i=0; i<strip.numPixels(); i++) {
+      strip.setPixelColor(i, Wheel((j) & 255));
+    }
+    strip.show();
+    delay(wait);
+  }
 }
 
 // Fill the dots one after the other with a color
@@ -54,18 +47,6 @@ void colorWipe(uint32_t c, uint8_t wait) {
       strip.setPixelColor(i, c);
       strip.show();
       delay(wait);
-  }
-}
-
-void rainbow(uint8_t wait) {
-  uint16_t i, j;
-
-  for(j=0; j<256; j++) {
-    for(i=0; i<strip.numPixels(); i++) {
-      strip.setPixelColor(i, Wheel((i+j) & 255));
-    }
-    strip.show();
-    delay(wait);
   }
 }
 
