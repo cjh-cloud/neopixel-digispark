@@ -1,7 +1,7 @@
 #include <Adafruit_NeoPixel.h>
 
 #define PIN 1
-#define STRIPSIZE 40 // Limited by max 256 bytes ram. At 3 bytes/LED you get max ~85 pixels
+#define STRIPSIZE 60 // Limited by max 256 bytes ram. At 3 bytes/LED you get max ~85 pixels
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = pin number (most are valid)
