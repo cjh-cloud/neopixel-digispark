@@ -1,9 +1,9 @@
 #include <Adafruit_NeoPixel.h>
 
-#define PIN 6
+#define PIN 0 // 6
 #define STRIPSIZE 90 //60 // Limited by max 256 bytes ram. At 3 bytes/LED you get max ~85 pixels
 
-#define BTNPIN 8
+#define BTNPIN 3 // 8
 
 int COUNT = 0;
 
@@ -23,38 +23,27 @@ void setup() {
   colorWipe(strip.Color(0,0,0), 25); // Black
 
   pinMode(BTNPIN, INPUT_PULLUP);
-//  digitalWrite(BTNPIN, HIGH);
 
   Serial.begin(9600); // open the serial port at 9600 bps:
 }
 
 void loop() {
-  if (COUNT == 1) {         // check if the input is HIGH (button released)
-    Serial.println("option 1 start");
+  // check if the input is HIGH (button released)
+  if (COUNT == 1) {
     colorWave(15);
-    Serial.println("option 1 end");
   } else if (COUNT == 2) {
-    Serial.println("option 2 start");
     rainbowCycle(15);
-    Serial.println("option 2 end");
   } 
   else {
-    Serial.println("option 0");
     checkButton();
-    Serial.println(COUNT);
   }
 }
 
 bool checkButton() {
   if (digitalRead(BTNPIN) == LOW) {         // check if the input is HIGH (button released)
-    Serial.println("Button is pressed");
     COUNT=(COUNT+1)%3;
-    Serial.println(COUNT);
-    Serial.println("Started Wiping");
     colorWipe(strip.Color(0,0,0), 100); // Black
-    Serial.println("Finished Wiping");
     delay(10);
-
     return true;
   } 
   return false;
