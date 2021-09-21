@@ -1,7 +1,11 @@
 #include <Adafruit_NeoPixel.h>
 
-#define PIN 1
-#define STRIPSIZE 60 // Limited by max 256 bytes ram. At 3 bytes/LED you get max ~85 pixels
+#define PIN 6
+#define STRIPSIZE 90 //60 // Limited by max 256 bytes ram. At 3 bytes/LED you get max ~85 pixels
+
+#define BTNPIN 8
+
+int COUNT = 0;
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = pin number (most are valid)
@@ -17,16 +21,43 @@ void setup() {
   strip.setBrightness(100); // set accordingly
   strip.show(); // Initialize all pixels to 'off'
   colorWipe(strip.Color(0,0,0), 25); // Black
+
+  pinMode(BTNPIN, INPUT_PULLUP);
+//  digitalWrite(BTNPIN, HIGH);
+
+  Serial.begin(9600); // open the serial port at 9600 bps:
 }
 
 void loop() {
-  // Some example procedures showing how to display to the pixels:
-//  colorWipe(strip.Color(0,0,0), 100); // Black
-//  rainbowCycle(15);
-//  colorWipe(strip.Color(0,0,0), 100); // Black
-//  colorWave(15);
-//  rainbow(1000);
-  solid(1000);
+  if (COUNT == 1) {         // check if the input is HIGH (button released)
+    Serial.println("option 1 start");
+    colorWave(15);
+    Serial.println("option 1 end");
+  } else if (COUNT == 2) {
+    Serial.println("option 2 start");
+    rainbowCycle(15);
+    Serial.println("option 2 end");
+  } 
+  else {
+    Serial.println("option 0");
+    checkButton();
+    Serial.println(COUNT);
+  }
+}
+
+bool checkButton() {
+  if (digitalRead(BTNPIN) == LOW) {         // check if the input is HIGH (button released)
+    Serial.println("Button is pressed");
+    COUNT=(COUNT+1)%3;
+    Serial.println(COUNT);
+    Serial.println("Started Wiping");
+    colorWipe(strip.Color(0,0,0), 100); // Black
+    Serial.println("Finished Wiping");
+    delay(10);
+
+    return true;
+  } 
+  return false;
 }
 
 void solid(uint16_t wait) {
@@ -37,6 +68,9 @@ void solid(uint16_t wait) {
       strip.setPixelColor(i, Wheel((j) & 255));
     }
     strip.show();
+    if (checkButton()) {
+      break;
+    }
     delay(wait);
   }
 }
@@ -50,6 +84,19 @@ void colorWipe(uint32_t c, uint8_t wait) {
   }
 }
 
+void rainbow(uint8_t wait) {
+  uint16_t i, j;
+
+  for(j=0; j<256; j++) {
+    for(i=0; i<strip.numPixels(); i++) {
+      strip.setPixelColor(i, Wheel((i+j) & 255));
+    }
+    strip.show();
+    checkButton();
+    delay(wait);
+  }
+}
+
 // Slightly different, this makes the rainbow equally distributed throughout
 void rainbowCycle(uint8_t wait) {
   uint16_t i, j;
@@ -59,6 +106,9 @@ void rainbowCycle(uint8_t wait) {
       strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
     }
     strip.show();
+    if (checkButton()) {
+      break;
+    }
     delay(wait);
   }
 }
@@ -103,6 +153,9 @@ void colorWave(uint8_t wait) {
     }
 
     strip.show();
+    if (checkButton()) {
+      break;
+    }
     delay(wait);
   }
 
