@@ -35,7 +35,8 @@ void loop() {
     rainbowCycle(15);
   } 
   else {
-    checkButton();
+//    checkButton();
+    solid(15);
   }
 }
 
