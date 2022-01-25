@@ -30,13 +30,13 @@ void setup() {
 void loop() {
   // check if the input is HIGH (button released)
   if (COUNT == 1) {
-    colorWave(15);
+    colorWave(150);
   } else if (COUNT == 2) {
-    rainbowCycle(15);
+    rainbowCycle(150);
   } 
   else {
 //    checkButton();
-    solid(15);
+    solid(1000);
   }
 }
 
